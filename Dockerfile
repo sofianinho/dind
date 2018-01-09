@@ -1,16 +1,20 @@
-FROM ubuntu:14.04
-MAINTAINER jerome.petazzoni@docker.com
+FROM ubuntu:16.04
 
 # Let's start with some basic stuff.
 RUN apt-get update -qq && apt-get install -qqy \
     apt-transport-https \
     ca-certificates \
     curl \
-    lxc \
+    software-properties-common \
     iptables
-    
+
+
+ARG VERSION=17.12.0~ce-0~ubuntu
 # Install Docker from Docker Inc. repositories.
-RUN curl -sSL https://get.docker.com/ | sh
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
+    && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+    && apt-get update \
+    && apt-get install -y docker-ce=${VERSION}
 
 # Install the magic wrapper.
 ADD ./wrapdocker /usr/local/bin/wrapdocker

@@ -1,3 +1,6 @@
+
+# Updated the Ubuntu dind to 16.04 from jpetazzo version
+
 # Docker-in-Docker
 
 This recipe lets you run Docker within Docker.
