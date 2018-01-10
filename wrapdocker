@@ -91,13 +91,13 @@ rm -rf /var/run/docker.pid
 if [ "$PORT" ]
 then
 	exec dockerd -H 0.0.0.0:$PORT -H unix:///var/run/docker.sock \
-		$DOCKER_DAEMON_ARGS
+		$DOCKER_DAEMON_ARGS>/var/log/docker.log &
 else
 	if [ "$LOG" == "file" ]
 	then
 		dockerd $DOCKER_DAEMON_ARGS &>/var/log/docker.log &
 	else
-		dockerd $DOCKER_DAEMON_ARGS &
+		dockerd $DOCKER_DAEMON_ARGS &>/var/log/docker.log &
 	fi
 	(( timeout = 60 + SECONDS ))
 	until docker info >/dev/null 2>&1
