@@ -12,15 +12,15 @@ CGROUP=/sys/fs/cgroup
 
 mountpoint -q $CGROUP ||
 	mount -n -t tmpfs -o uid=0,gid=0,mode=0755 cgroup $CGROUP || {
-		echo "Could not make a tmpfs mount. Did you use --privileged?"
+		>&2 echo "Could not make a tmpfs mount. Did you use --privileged?"
 		exit 1
 	}
 
 if [ -d /sys/kernel/security ] && ! mountpoint -q /sys/kernel/security
 then
     mount -t securityfs none /sys/kernel/security || {
-        echo "Could not mount /sys/kernel/security."
-        echo "AppArmor detection and --privileged mode might break."
+        >&2 echo "Could not mount /sys/kernel/security."
+        >&2 echo "AppArmor detection and --privileged mode might break."
     }
 fi
 
@@ -61,9 +61,9 @@ done
 # a "sub-container" properly if the "devices" cgroup is not in its
 # own hierarchy. Let's detect this and issue a warning.
 grep -q :devices: /proc/1/cgroup ||
-	echo "WARNING: the 'devices' cgroup should be in its own hierarchy."
+	>&2 echo "WARNING: the 'devices' cgroup should be in its own hierarchy."
 grep -qw devices /proc/1/cgroup ||
-	echo "WARNING: it looks like the 'devices' cgroup is not mounted."
+	>&2 echo "WARNING: it looks like the 'devices' cgroup is not mounted."
 
 # Now, close extraneous file descriptors.
 pushd /proc/self/fd >/dev/null
