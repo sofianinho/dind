@@ -9,12 +9,12 @@ RUN apt-get update -qq && apt-get install -qqy \
     iptables
 
 
-ARG VERSION=17.12.0~ce-0~ubuntu
+ARG VERSION=18.09.2~3-0~ubuntu-xenial
 # Install Docker from Docker Inc. repositories.
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
     && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
     && apt-get update \
-    && apt-get install -y docker-ce=${VERSION}
+    && apt-get install -y docker-ce=${VERSION} docker-ce-cli containerd.io
 
 # Install the magic wrapper.
 ADD ./wrapdocker /usr/local/bin/wrapdocker
